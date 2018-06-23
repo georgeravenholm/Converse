@@ -36,14 +36,7 @@ namespace SabrineClient
 
 					sw.WriteLine(msg);
 					sw.Flush();
-
-					// teste
-					Message message = new Message(msg , "aaaaaaaaaaaaaaaaa");
-					byte[] teste = message.GetBytes();
-					// teste
-					int a = 0;
-					foreach (byte b in teste) Console.WriteLine((a++).ToString() + "=" + b);
-
+					
 				}
 
 				client.Close();

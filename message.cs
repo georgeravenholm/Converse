@@ -14,14 +14,14 @@ namespace Common
 	 */
 	class Message
 	{
-		byte[] data = new byte[273];
+		byte[] data = new byte[273]; // private because we generate
 
-		byte command;
+		public byte command;
 
-		string message = "";
-		string username = "";
+		public string message = "";
+		public string username = "";
 
-		byte channelID;
+		public byte channelID;
 
 		public Message( string msg , string user )
 		{
@@ -30,7 +30,7 @@ namespace Common
 			username = user;
 		}
 
-		public Message( int command , string message, string username, byte channelID)
+		public Message( Commands command , string message, string username, byte channelID)
 		{
 
 			this.command = (byte)command;
@@ -39,12 +39,23 @@ namespace Common
 			this.channelID = channelID;
 		}
 
+		public Message (byte[] packet) // Reassemble data
+		{
+			data = packet;
+			command = data[0];
+			channelID = data[272];
+
+			message = Encoding.ASCII.GetString(data, 1, 255).Trim(new char[]{ ' ', '\0' });
+			username = Encoding.ASCII.GetString(data, 256, 16).Trim(new char[]{ ' ', '\0' });
+		}
+
 		public byte[] GetBytes()
 		{
 			data.Initialize(); // clear data
 			data[0] = command;
 			Encoding.ASCII.GetBytes(message, 0, (message.Length < 255 ? message.Length : 255), data, 1); // put message in
 			Encoding.ASCII.GetBytes(username, 0, (username.Length < 16 ? username.Length : 16), data, 256); // put username in
+			data[272] = channelID;
 
 			return data;
 		}
