@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using System.Net.Sockets;
 
@@ -21,6 +21,9 @@ namespace SabrineClient
 				StreamReader sr = new StreamReader(client.GetStream());
 				StreamWriter sw = new StreamWriter(client.GetStream());
 
+				// create receiver
+				Receiver r = new Receiver(client); // (autostarts)
+
 				for (;;)
 				{
 					Console.Write("message> ");
@@ -34,10 +37,42 @@ namespace SabrineClient
 
 				client.Close();
 			}
-			catch (Exception c)
+			catch (Exception e)
 			{
 				Console.Beep();
-				Console.WriteLine(c.Message);
+				Console.WriteLine(e.Message);
+			}
+		}
+	}
+
+	class Receiver
+	{
+		private TcpClient client;
+		private StreamReader sr;
+
+		public Receiver(TcpClient client)
+		{
+			this.client = client;
+			sr = new StreamReader(client.GetStream());
+
+			Thread doink = new Thread(ReceiverMain);
+			doink.Start();
+		}
+
+		private void ReceiverMain()
+		{
+			try
+			{
+				for (;;)
+				{
+					string msg = sr.ReadLine(); // wait for msg
+					Console.WriteLine(msg);
+				}
+			}
+			catch (Exception e)
+			{
+				Console.Beep();
+				Console.WriteLine(e.Message);
 			}
 		}
 	}

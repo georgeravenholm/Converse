@@ -71,6 +71,8 @@ namespace SabrineServer
 						if (command == "setusername")
 						{
 							this.username = tokens[1];
+							sw.WriteLine("[SYSTEM] Username updated");
+							sw.Flush();
 						}
 					}
 				}
