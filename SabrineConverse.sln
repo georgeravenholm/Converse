@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabrineClient", "SabrineCli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabrineServer", "SabrineServer\SabrineServer.csproj", "{1D104DFE-FDC6-4B3C-83C9-838A0CF10EE7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{CDF520FF-18C6-4A5F-819D-C6438AA3DF94}"
+	ProjectSection(SolutionItems) = preProject
+		message.cs = message.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
