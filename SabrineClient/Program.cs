@@ -14,6 +14,7 @@ namespace SabrineClient
 		{
 			try
 			{
+				if (args.Count() < 1) throw new Exception("No server specified!");
 				string server = args[0];
 
 				TcpClient client = new TcpClient(server, 6742); // HTTP
@@ -57,6 +58,7 @@ namespace SabrineClient
 
 			Thread doink = new Thread(ReceiverMain);
 			doink.Start();
+
 		}
 
 		private void ReceiverMain()

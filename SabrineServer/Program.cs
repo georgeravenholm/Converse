@@ -63,16 +63,25 @@ namespace SabrineServer
 					string msg = sr.ReadLine();
 					Console.WriteLine("\t(" + clientID + ") " + username + ": " + msg);
 
-					if (msg[0] == '/')
+					if (msg.Length > 1)
 					{
-						string[] tokens = msg.Substring(1).Split(' ');
-						string command = tokens[0].ToLower();
-
-						if (command == "setusername")
+						if (msg[0] == '/')
 						{
-							this.username = tokens[1];
-							sw.WriteLine("[SYSTEM] Username updated");
-							sw.Flush();
+							string[] argv = msg.Substring(1).Split(' ');
+							int argc = argv.Count();
+							string command = argv[0].ToLower();
+
+							if (command == "setusername" && argc>1)
+							{
+								this.username = argv[1];
+								sw.WriteLine("[SYSTEM] Username updated");
+								sw.Flush();
+							}
+							else
+							{
+								sw.WriteLine("[SYSTEM] Command error.");
+								sw.Flush();
+							}
 						}
 					}
 				}
