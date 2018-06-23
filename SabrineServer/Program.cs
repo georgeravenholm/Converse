@@ -17,12 +17,17 @@ namespace SabrineServer
 			listener.Start();
 
 			int clients = 0;
+
+			List<Client> clientlist = new List<Client>();
+			StringWriter stringstream = new StringWriter();
+
 			for (;;)
 			{
 				Console.WriteLine("Waiting for new connection...");
 				TcpClient client = listener.AcceptTcpClient(); // wait until a client appears
 
 				Client connection = new Client();
+				clientlist.Add(connection);
 
 				connection.Start(client, clients++);
 			}
@@ -31,7 +36,7 @@ namespace SabrineServer
 
 	class Client
 	{
-		TcpClient client;
+		public TcpClient socket;
 		int clientID;
 		StreamReader sr;
 		StreamWriter sw;
@@ -41,9 +46,9 @@ namespace SabrineServer
 		public void Start(TcpClient socket, int clientID)
 		{
 			this.clientID = clientID;
-			client = socket;
-			sr = new StreamReader(client.GetStream());
-			sw = new StreamWriter(client.GetStream());
+			this.socket = socket;
+			sr = new StreamReader(socket.GetStream());
+			sw = new StreamWriter(socket.GetStream());
 
 			username = "Anon" + clientID;
 
