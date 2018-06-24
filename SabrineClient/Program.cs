@@ -65,8 +65,8 @@ namespace SabrineClient
 			{
 				for (;;)
 				{
-					string msg = PacketIO.Receive(client).message; // wait for msg
-					Console.WriteLine(msg);
+					Message m = PacketIO.Receive(client); // wait for msg
+					Console.WriteLine(m.username + ": "+m.message);
 				}
 			}
 			catch (Exception e)
