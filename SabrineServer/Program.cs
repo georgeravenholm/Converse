@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using System.IO;
 using System.Net.Sockets;
+using Common;
+using Common.Packets;
 
 namespace SabrineServer
 {
@@ -19,7 +21,6 @@ namespace SabrineServer
 			int clients = 0;
 
 			List<Client> clientlist = new List<Client>();
-			StringWriter stringstream = new StringWriter();
 
 			for (;;)
 			{
@@ -38,8 +39,6 @@ namespace SabrineServer
 	{
 		public TcpClient socket;
 		int clientID;
-		StreamReader sr;
-		StreamWriter sw;
 
 		string username;
 
@@ -47,8 +46,6 @@ namespace SabrineServer
 		{
 			this.clientID = clientID;
 			this.socket = socket;
-			sr = new StreamReader(socket.GetStream());
-			sw = new StreamWriter(socket.GetStream());
 
 			username = "Anon" + clientID;
 
@@ -65,7 +62,10 @@ namespace SabrineServer
 			{
 				while (true)
 				{
-					string msg = sr.ReadLine();
+					Message message = PacketIO.Receive(socket);
+					if (message.command != (byte)Commands.Message) continue;
+					string msg = message.message;
+
 					Console.WriteLine("\t(" + clientID + ") " + username + ": " + msg);
 
 					if (msg.Length > 1)
@@ -79,13 +79,11 @@ namespace SabrineServer
 							if (command == "setusername" && argc>1)
 							{
 								this.username = argv[1];
-								sw.WriteLine("[SYSTEM] Username updated");
-								sw.Flush();
+								PacketIO.Send(socket,new Message(Commands.System, "[SYSTEM] Username updated","",0));
 							}
 							else
 							{
-								sw.WriteLine("[SYSTEM] Command error.");
-								sw.Flush();
+								PacketIO.Send(socket, new Message(Commands.System, "[SYSTEM] Command error!", "", 0));
 							}
 						}
 					}

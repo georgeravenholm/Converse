@@ -7,6 +7,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Diagnostics;
 using Common;
+using Common.Packets;
 
 namespace SabrineClient
 {
@@ -21,9 +22,6 @@ namespace SabrineClient
 
 				TcpClient client = new TcpClient(server, 6742); // HTTP
 
-				StreamReader sr = new StreamReader(client.GetStream());
-				StreamWriter sw = new StreamWriter(client.GetStream());
-
 				// create receiver
 				Receiver r = new Receiver(client); // (autostarts)
 
@@ -34,8 +32,7 @@ namespace SabrineClient
 
 					if (msg.ToLower() == "q") break;
 
-					sw.WriteLine(msg);
-					sw.Flush();
+					PacketIO.Send(client, new Message(msg));
 					
 				}
 
@@ -52,12 +49,10 @@ namespace SabrineClient
 	class Receiver
 	{
 		private TcpClient client;
-		private StreamReader sr;
 
 		public Receiver(TcpClient client)
 		{
 			this.client = client;
-			sr = new StreamReader(client.GetStream());
 
 			Thread doink = new Thread(ReceiverMain);
 			doink.Start();
@@ -70,7 +65,7 @@ namespace SabrineClient
 			{
 				for (;;)
 				{
-					string msg = sr.ReadLine(); // wait for msg
+					string msg = PacketIO.Receive(client).message; // wait for msg
 					Console.WriteLine(msg);
 				}
 			}
