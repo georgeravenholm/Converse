@@ -59,6 +59,11 @@ namespace Common
 
 			return data;
 		}
+
+		public byte[] GetMessageStringAsBytes()
+		{
+			return Encoding.ASCII.GetBytes(message);
+		}
 	}
 
 	enum Commands
