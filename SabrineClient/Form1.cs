@@ -12,9 +12,23 @@ namespace SabrineClient
 {
 	public partial class Form1 : Form
 	{
-		public Form1()
+		private Func<string, int> callback;
+
+		public Form1(Func<string,int> callback)
 		{
 			InitializeComponent();
+			this.callback = callback;
+		}
+
+		private void Stend_Click(object sender, EventArgs e)
+		{
+			callback(tMessage.Text);
+			tMessage.Text = "";
+		}
+
+		private void tMessage_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter) { callback(tMessage.Text); tMessage.Text = ""; }
 		}
 	}
 }

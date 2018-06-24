@@ -38,6 +38,7 @@
 			this.tMessage.Name = "tMessage";
 			this.tMessage.Size = new System.Drawing.Size(283, 20);
 			this.tMessage.TabIndex = 0;
+			this.tMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tMessage_KeyDown);
 			// 
 			// Stend
 			// 
@@ -45,8 +46,9 @@
 			this.Stend.Name = "Stend";
 			this.Stend.Size = new System.Drawing.Size(81, 23);
 			this.Stend.TabIndex = 1;
-			this.Stend.Text = "button1";
+			this.Stend.Text = "Stend";
 			this.Stend.UseVisualStyleBackColor = true;
+			this.Stend.Click += new System.EventHandler(this.Stend_Click);
 			// 
 			// Form1
 			// 

@@ -35,18 +35,18 @@ namespace SabrineServer
 
 		public static int BroadcastMsg(Message m)
 		{
-			clientlist.RemoveAll(ClientIsValid); // collect dead clients
+			clientlist.RemoveAll(ClientAintValid); // collect dead clients
 			foreach (Client c in clientlist)
 			{
-				if (!ClientIsValid(c)) continue;
+				if (ClientAintValid(c)) continue;
 				PacketIO.Send(c.socket, m);
 			}
 			return 0;
 		}
 
-		static bool ClientIsValid(Client c)
+		static bool ClientAintValid(Client c)
 		{
-			return c.socket.Connected;
+			return !c.socket.Connected;
 		}
 	}
 
