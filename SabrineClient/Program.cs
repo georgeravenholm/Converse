@@ -84,7 +84,26 @@ namespace SabrineClient
 				for (;;)
 				{
 					Message m = PacketIO.Receive(client); // wait for msg
-					Console.WriteLine(m.username + ": "+m.message);
+
+					// Received message!
+					switch ((Commands)m.command)
+					{
+						case Commands.Message:
+							Console.WriteLine(m.username + ": " + m.message);
+							break;
+
+						case Commands.System:
+							Console.WriteLine("[SYSTEM] " + m.message);
+							break;
+
+						case Commands.Connection:
+							Console.WriteLine("* " + m.message);
+							break;
+
+						default:
+							break;
+					}
+					
 				}
 			}
 			catch (Exception e)

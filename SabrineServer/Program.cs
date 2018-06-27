@@ -17,21 +17,30 @@ namespace SabrineServer
 
 		static void Main(string[] args)
 		{
-			TcpListener listener = new TcpListener(System.Net.IPAddress.Any,6742);
-			listener.Start();
-			int clients = 0;
-
-			for (;;)
-			{
-				Console.WriteLine("Waiting for new connection...");
-				TcpClient client = listener.AcceptTcpClient(); // wait until a client appears
-
-				Client connection = new Client();
-				clientlist.Add(connection);
-
-				connection.Start(client, clients++,BroadcastMsg);
-			}
+            // load configs
+            StartServer(new Config());
 		}
+
+        static void StartServer(Config cfg)
+        {
+            TcpListener listener = new TcpListener(System.Net.IPAddress.Any, cfg.port);
+            listener.Start();
+            int clients = 0;
+
+            for (; ; )
+            {
+                Console.WriteLine("Waiting for new connection...");
+                TcpClient client = listener.AcceptTcpClient(); // wait until a client appears
+
+                Client connection = new Client();
+                clientlist.Add(connection);
+
+                connection.Start(client, clients++, BroadcastMsg);
+                // Send MOTD
+                foreach (string str in cfg.MOTD.Split('\n'))
+                    PacketIO.Send(connection.socket, new Message(Commands.System, str, "MOTD", 0));
+            }
+        }
 
 		public static int BroadcastMsg(Message m)
 		{
@@ -76,11 +85,13 @@ namespace SabrineServer
 			// create thread
 			thread = new Thread(ClientMain);
 			thread.Start();
-		}
+
+        }
 
 		private void ClientMain()
 		{
 			Console.WriteLine("Client with ID " + clientID + " thread started");
+			callback(new Message(Commands.Connection, username + " has joined", "", 0));
 
 			try
 			{
@@ -101,11 +112,11 @@ namespace SabrineServer
 						if (command == "setusername" && argc>1)
 						{
 							this.username = argv[1];
-							PacketIO.Send(socket,new Message(Commands.System, "[SYSTEM] Username updated","",0));
+							PacketIO.Send(socket,new Message(Commands.System, "Username updated","",0));
 						}
 						else
 						{
-							PacketIO.Send(socket, new Message(Commands.System, "[SYSTEM] Command error!", "", 0));
+							PacketIO.Send(socket, new Message(Commands.System, "Command error!", "", 0));
 						}
 					}
 					else
@@ -122,6 +133,7 @@ namespace SabrineServer
 			}
 
 			Console.WriteLine("Client with ID " + clientID + " thread ended");
+			callback(new Message(Commands.Connection,username + " has left","",0));
 		}
 	}
 }
