@@ -83,6 +83,7 @@ namespace Common
 			Message = 1,
 			Connection = 2,
 			Fail = 3,
+            Notify = 4,
 		}
 
 

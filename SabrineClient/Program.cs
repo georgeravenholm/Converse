@@ -89,18 +89,37 @@ namespace SabrineClient
 					switch ((Commands)m.command)
 					{
 						case Commands.Message:
-							Console.WriteLine(m.username + ": " + m.message);
-							break;
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.Write(m.username + ": ");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine(m.message);
+
+                            Console.ResetColor();
+                            break;
 
 						case Commands.System:
-							Console.WriteLine("[SYSTEM] " + m.message);
+                            Console.ForegroundColor = ConsoleColor.Red;
+							Console.Write("[SYSTEM] ");
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.BackgroundColor = ConsoleColor.Blue;
+                            Console.WriteLine(m.message);
+
+                            Console.ResetColor();
 							break;
 
 						case Commands.Connection:
-							Console.WriteLine("* " + m.message);
-							break;
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("* " + m.message);
+                            Console.ResetColor();
+                            break;
 
-						default:
+                        case Commands.Notify:
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("* " + m.message);
+                            Console.ResetColor();
+                            break;
+
+                        default:
 							break;
 					}
 					

@@ -98,7 +98,7 @@ namespace SabrineServer
 				while (true)
 				{
 					Message message = PacketIO.Receive(socket);
-					if (message.command != (byte)Commands.Message) continue;
+					if (message.command != (byte)Commands.Message) continue; // only accept message commands from client
 					string msg = message.message;
 
 					Console.WriteLine("\t(" + clientID + ") " + username + ": " + msg);
@@ -111,8 +111,9 @@ namespace SabrineServer
 
 						if (command == "setusername" && argc>1)
 						{
-							this.username = argv[1];
-							PacketIO.Send(socket,new Message(Commands.System, "Username updated","",0));
+                            PacketIO.Send(socket, new Message(Commands.System, "Username updated", "", 0));
+                            callback(new Message(Commands.Notify, "User " + username + " has changed their name to " + argv[1], "", 0));
+                            this.username = argv[1];
 						}
 						else
 						{
